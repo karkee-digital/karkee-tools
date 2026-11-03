@@ -1,4 +1,8 @@
 
+let pageViewsChart = null;
+
+
+// Verify admin access
 async function verifyAdmin() {
     try {
         const { data: { user }, error } =
@@ -45,6 +49,7 @@ async function verifyAdmin() {
 }
 
 
+// Get database count
 async function getCount(table, filters = []) {
     let query = supabaseClient
         .from(table)
@@ -59,6 +64,153 @@ async function getCount(table, filters = []) {
     if (error) throw error;
 
     return count || 0;
+}
+
+
+// Get date in India timezone
+function getIndiaDate(date) {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).format(date);
+}
+
+
+// Format date label
+function getDateLabel(date) {
+    return new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "short"
+    }).format(date);
+}
+
+
+// Load 7-day page views chart
+function renderPageViewsChart(records) {
+
+    const labels = [];
+    const dailyCounts = {};
+
+    // Prepare the last 7 dates in India timezone.
+    const today = getIndiaDate(new Date());
+
+    const todayDate = new Date(`${today}T00:00:00+05:30`);
+
+    for (let i = 6; i >= 0; i--) {
+
+        const date = new Date(todayDate);
+        date.setDate(date.getDate() - i);
+
+        const dateKey = getIndiaDate(date);
+
+        labels.push({
+            key: dateKey,
+            label: getDateLabel(date)
+        });
+
+        dailyCounts[dateKey] = 0;
+    }
+
+    // Count visits for each day.
+    records.forEach(item => {
+
+        if (!item.visited_at) return;
+
+        const visitDate = getIndiaDate(
+            new Date(item.visited_at)
+        );
+
+        if (Object.prototype.hasOwnProperty.call(dailyCounts, visitDate)) {
+            dailyCounts[visitDate]++;
+        }
+    });
+
+    const chartLabels = labels.map(item => item.label);
+
+    const chartData = labels.map(
+        item => dailyCounts[item.key]
+    );
+
+    const canvas = document.getElementById("pageViewsChart");
+
+    if (!canvas) return;
+
+    // Remove previous chart before refreshing.
+    if (pageViewsChart) {
+        pageViewsChart.destroy();
+    }
+
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js is not loaded.");
+        return;
+    }
+
+    pageViewsChart = new Chart(canvas, {
+
+        type: "line",
+
+        data: {
+            labels: chartLabels,
+
+            datasets: [{
+                label: "Page Views",
+
+                data: chartData,
+
+                borderColor: "#0d6efd",
+
+                backgroundColor: "rgba(13, 110, 253, 0.12)",
+
+                borderWidth: 3,
+
+                fill: true,
+
+                tension: 0.35,
+
+                pointRadius: 5,
+
+                pointHoverRadius: 7
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    },
+
+                    title: {
+                        display: true,
+                        text: "Page Views"
+                    }
+                },
+
+                x: {
+                    title: {
+                        display: true,
+                        text: "Date"
+                    }
+                }
+            }
+        }
+    });
 }
 
 
@@ -81,30 +233,21 @@ async function loadWebsiteAnalytics() {
         records.map(item => item.visitor_id)
     ).size;
 
-    // Today's date in India.
-    const today = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Asia/Kolkata",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }).format(new Date());
+    const today = getIndiaDate(new Date());
 
     const todayViews = records.filter(item => {
-        const visitDate = new Intl.DateTimeFormat("en-CA", {
-            timeZone: "Asia/Kolkata",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit"
-        }).format(new Date(item.visited_at));
-
-        return visitDate === today;
+        return getIndiaDate(new Date(item.visited_at)) === today;
     }).length;
 
     document.getElementById("totalPageViews").textContent = totalViews;
     document.getElementById("uniqueVisitors").textContent = uniqueVisitorCount;
     document.getElementById("todayPageViews").textContent = todayViews;
 
-    // Count popular pages.
+    // Render 7-day chart.
+    renderPageViewsChart(records);
+
+
+    // Popular pages
     const pageCounts = {};
 
     records.forEach(item => {
@@ -126,7 +269,8 @@ async function loadWebsiteAnalytics() {
             `).join("")
             : '<p class="text-muted">No page visits yet.</p>';
 
-    // Count popular tools.
+
+    // Popular tools
     const toolCounts = {};
 
     records.forEach(item => {
@@ -152,7 +296,7 @@ async function loadWebsiteAnalytics() {
 }
 
 
-// Escape text before inserting it into HTML.
+// Escape HTML
 function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, character => ({
         "&": "&amp;",
@@ -164,6 +308,7 @@ function escapeHTML(value) {
 }
 
 
+// Load all statistics
 async function loadStatistics() {
 
     const loadingMessage = document.getElementById("loadingMessage");
@@ -234,7 +379,6 @@ async function loadStatistics() {
         document.getElementById("readContactMessages").textContent =
             readContactMessages;
 
-        // Load analytics separately.
         await loadWebsiteAnalytics();
 
         loadingMessage.style.display = "none";
@@ -259,6 +403,7 @@ async function loadStatistics() {
 }
 
 
+// Initialize overview
 async function initializeOverview() {
 
     const isAdmin = await verifyAdmin();
@@ -269,7 +414,10 @@ async function initializeOverview() {
 }
 
 
+// Refresh button
 document.getElementById("refreshStatsBtn")
     .addEventListener("click", loadStatistics);
 
+
+// Start
 initializeOverview();
