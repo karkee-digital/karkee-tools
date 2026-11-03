@@ -1,5 +1,6 @@
 
 let pageViewsChart = null;
+let monthlyPageViewsChart = null;
 
 
 // Verify admin access
@@ -88,15 +89,38 @@ function getDateLabel(date) {
 }
 
 
+// Get year-month key in India timezone
+function getIndiaMonth(date) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit"
+    }).formatToParts(date);
+
+    const year = parts.find(part => part.type === "year").value;
+    const month = parts.find(part => part.type === "month").value;
+
+    return `${year}-${month}`;
+}
+
+
+// Format monthly chart label
+function getMonthLabel(date) {
+    return new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        month: "short",
+        year: "numeric"
+    }).format(date);
+}
+
+
 // Load 7-day page views chart
 function renderPageViewsChart(records) {
 
     const labels = [];
     const dailyCounts = {};
 
-    // Prepare the last 7 dates in India timezone.
     const today = getIndiaDate(new Date());
-
     const todayDate = new Date(`${today}T00:00:00+05:30`);
 
     for (let i = 6; i >= 0; i--) {
@@ -114,7 +138,6 @@ function renderPageViewsChart(records) {
         dailyCounts[dateKey] = 0;
     }
 
-    // Count visits for each day.
     records.forEach(item => {
 
         if (!item.visited_at) return;
@@ -138,7 +161,6 @@ function renderPageViewsChart(records) {
 
     if (!canvas) return;
 
-    // Remove previous chart before refreshing.
     if (pageViewsChart) {
         pageViewsChart.destroy();
     }
@@ -157,28 +179,19 @@ function renderPageViewsChart(records) {
 
             datasets: [{
                 label: "Page Views",
-
                 data: chartData,
-
                 borderColor: "#0d6efd",
-
                 backgroundColor: "rgba(13, 110, 253, 0.12)",
-
                 borderWidth: 3,
-
                 fill: true,
-
                 tension: 0.35,
-
                 pointRadius: 5,
-
                 pointHoverRadius: 7
             }]
         },
 
         options: {
             responsive: true,
-
             maintainAspectRatio: false,
 
             plugins: {
@@ -206,6 +219,120 @@ function renderPageViewsChart(records) {
                     title: {
                         display: true,
                         text: "Date"
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+// Load monthly page views chart
+function renderMonthlyPageViewsChart(records) {
+
+    const monthlyCounts = {};
+    const labels = [];
+
+    const currentMonth = getIndiaMonth(new Date());
+
+    const [year, month] = currentMonth.split("-").map(Number);
+
+    // Prepare the last 12 months.
+    for (let i = 11; i >= 0; i--) {
+
+        const date = new Date(
+            Date.UTC(year, month - 1 - i, 1, 12)
+        );
+
+        const monthKey = getIndiaMonth(date);
+
+        labels.push({
+            key: monthKey,
+            label: getMonthLabel(date)
+        });
+
+        monthlyCounts[monthKey] = 0;
+    }
+
+    // Count visits for each month.
+    records.forEach(item => {
+
+        if (!item.visited_at) return;
+
+        const visitMonth = getIndiaMonth(
+            new Date(item.visited_at)
+        );
+
+        if (Object.prototype.hasOwnProperty.call(monthlyCounts, visitMonth)) {
+            monthlyCounts[visitMonth]++;
+        }
+    });
+
+    const chartLabels = labels.map(item => item.label);
+
+    const chartData = labels.map(
+        item => monthlyCounts[item.key]
+    );
+
+    const canvas = document.getElementById("monthlyPageViewsChart");
+
+    if (!canvas) return;
+
+    if (monthlyPageViewsChart) {
+        monthlyPageViewsChart.destroy();
+    }
+
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js is not loaded.");
+        return;
+    }
+
+    monthlyPageViewsChart = new Chart(canvas, {
+
+        type: "bar",
+
+        data: {
+            labels: chartLabels,
+
+            datasets: [{
+                label: "Monthly Page Views",
+                data: chartData,
+                backgroundColor: "rgba(13, 110, 253, 0.75)",
+                borderColor: "#0d6efd",
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    },
+
+                    title: {
+                        display: true,
+                        text: "Page Views"
+                    }
+                },
+
+                x: {
+                    title: {
+                        display: true,
+                        text: "Month"
                     }
                 }
             }
@@ -243,8 +370,9 @@ async function loadWebsiteAnalytics() {
     document.getElementById("uniqueVisitors").textContent = uniqueVisitorCount;
     document.getElementById("todayPageViews").textContent = todayViews;
 
-    // Render 7-day chart.
+    // Render both charts.
     renderPageViewsChart(records);
+    renderMonthlyPageViewsChart(records);
 
 
     // Popular pages

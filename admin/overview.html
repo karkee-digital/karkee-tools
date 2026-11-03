@@ -54,6 +54,7 @@
             </p>
         </div>
 
+        <!-- Analytics Cards -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-4">
                 <p class="text-muted mb-2">Total Page Views</p>
@@ -76,12 +77,28 @@
             </div>
         </div>
 
-        <!-- Page Views Chart -->
+        <!-- 7-Day Page Views Chart -->
         <div class="col-12">
             <div class="card border-0 shadow-sm p-4">
-                <h5 class="fw-bold mb-3">Page Views - Last 7 Days</h5>
+                <h5 class="fw-bold mb-3">
+                    Page Views - Last 7 Days
+                </h5>
+
                 <div style="position: relative; height: 320px;">
                     <canvas id="pageViewsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12-Month Page Views Chart -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-3">
+                    Monthly Page Views - Last 12 Months
+                </h5>
+
+                <div style="position: relative; height: 320px;">
+                    <canvas id="monthlyPageViewsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -90,6 +107,7 @@
         <div class="col-md-6">
             <div class="card border-0 shadow-sm p-4 h-100">
                 <h5 class="fw-bold mb-3">Popular Pages</h5>
+
                 <div id="popularPages">
                     <p class="text-muted">Loading...</p>
                 </div>
@@ -100,6 +118,7 @@
         <div class="col-md-6">
             <div class="card border-0 shadow-sm p-4 h-100">
                 <h5 class="fw-bold mb-3">Most Used Tools</h5>
+
                 <div id="popularTools">
                     <p class="text-muted">Loading...</p>
                 </div>
@@ -149,6 +168,7 @@
         <!-- Contact Messages -->
         <div class="col-12 mt-5">
             <h4 class="fw-bold">Contact Messages</h4>
+
             <p class="text-muted">
                 Overview of messages submitted through your contact form.
             </p>
