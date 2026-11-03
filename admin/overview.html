@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Website Overview | KARKEE TOOLS</title>
-
     <meta name="robots" content="noindex, nofollow">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +16,6 @@
 
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
-
         <a class="navbar-brand fw-bold" href="dashboard.html">
             KARKEE TOOLS
         </a>
@@ -31,7 +29,6 @@
                 Logout
             </button>
         </div>
-
     </div>
 </nav>
 
@@ -49,7 +46,60 @@
 
     <div class="row g-4" id="statisticsSection" style="display:none;">
 
+        <!-- Website Analytics -->
+        <div class="col-12">
+            <h4 class="fw-bold">Website Analytics</h4>
+            <p class="text-muted">
+                Visitor and page-view statistics.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Total Page Views</p>
+                <h2 class="fw-bold" id="totalPageViews">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Unique Visitors</p>
+                <h2 class="fw-bold text-primary" id="uniqueVisitors">0</h2>
+                <small class="text-muted">Estimated using browser IDs</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Today's Page Views</p>
+                <h2 class="fw-bold text-success" id="todayPageViews">0</h2>
+            </div>
+        </div>
+
+        <!-- Popular Pages -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h5 class="fw-bold mb-3">Popular Pages</h5>
+                <div id="popularPages">
+                    <p class="text-muted">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Tools -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h5 class="fw-bold mb-3">Most Used Tools</h5>
+                <div id="popularTools">
+                    <p class="text-muted">Loading...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Tools Statistics -->
+        <div class="col-12 mt-5">
+            <h4 class="fw-bold">Tools Statistics</h4>
+        </div>
 
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-4">
@@ -86,8 +136,7 @@
             </div>
         </div>
 
-        <!-- Contact Messages Statistics -->
-
+        <!-- Contact Messages -->
         <div class="col-12 mt-5">
             <h4 class="fw-bold">Contact Messages</h4>
             <p class="text-muted">
