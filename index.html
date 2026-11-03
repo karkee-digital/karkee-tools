@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="KARKEE TOOLS - Free online PDF, image, text, design, developer, QR code, calculator and converter tools.">
+
+    <meta name="keywords"
+        content="free online tools, PDF tools, image tools, text tools, developer tools, calculators, converters">
+
+    <meta name="author" content="Karkee Digital Studio">
+
+    <title>KARKEE TOOLS - Free Tools. Simple Solutions.</title>
+
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="index.html">
+                KARKEE TOOLS
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categories">Categories</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tools">All Tools</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="container text-center">
+
+            <h1>Free Online Tools for Everyone</h1>
+
+            <p class="hero-description">
+                Simple, useful and free tools to make your daily work easier.
+            </p>
+
+            <p class="text-muted">
+                PDF Tools · Image Tools · Text Tools · Developer Tools and more
+            </p>
+
+        </div>
+    </section>
+
+
+    <!-- SEARCH SECTION -->
+    <section class="container py-4">
+
+        <div class="text-center">
+
+            <h2 class="section-title">Find Your Tool</h2>
+
+            <p class="text-muted">
+                Search for the tool you need.
+            </p>
+
+            <div class="input-group mx-auto" style="max-width: 550px;">
+
+                <input
+                    type="search"
+                    id="tool-search"
+                    class="form-control search-box"
+                    placeholder="Search for a tool..."
+                    aria-label="Search tools">
+
+                <button
+                    type="button"
+                    id="search-button"
+                    class="btn btn-primary">
+                    Search
+                </button>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- AVAILABLE TOOLS -->
+    <section class="container pb-5" id="tools">
+
+        <h2 class="section-title">
+            Available Tools
+        </h2>
+
+        <div class="row g-3" id="tool-list">
+
+            <div class="col-12">
+                <p class="text-muted">
+                    Loading tools...
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- EXPLORE CATEGORIES -->
+    <section class="categories-section py-5" id="categories">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 mb-2">
+                    EXPLORE OUR TOOLS
+                </span>
+
+                <h2 class="section-title">
+                    Explore Categories
+                </h2>
+
+                <p class="text-muted">
+                    Discover useful tools organised into categories.
+                </p>
+
+            </div>
+
+            <!-- Categories load dynamically from Supabase -->
+            <div class="row g-4" id="category-list">
+
+                <div class="col-12 text-center">
+                    <p class="text-muted">
+                        Loading categories...
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT SECTION -->
+    <section class="container py-5">
+
+        <div class="text-center">
+
+            <h2 class="section-title">
+                About KARKEE TOOLS
+            </h2>
+
+            <p class="text-muted mx-auto" style="max-width: 750px;">
+
+                KARKEE TOOLS provides simple and useful online tools
+                for students, developers, creators and everyday users.
+
+                Our goal is to make digital tasks easier with
+                accessible and easy-to-use tools.
+
+            </p>
+
+            <p class="fw-semibold">
+                Free tools. Simple solutions.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer-section py-4">
+
+        <div class="container text-center">
+
+            <h5 class="fw-bold">
+                KARKEE TOOLS
+            </h5>
+
+            <p class="text-muted">
+                Free tools. Simple solutions.
+            </p>
+
+            <div class="footer-links mb-3">
+
+                <a href="index.html">Home</a>
+
+                <a href="about.html">About</a>
+
+                <a href="contact.html">Contact</a>
+
+                <a href="privacy-policy.html">Privacy Policy</a>
+
+                <a href="terms.html">Terms & Conditions</a>
+
+            </div>
+
+            <p class="small text-muted mb-0">
+
+                © <span id="current-year"></span>
+                Karkee Digital Studio. All rights reserved.
+
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+<footer class="site-footer">
+    <div class="container py-5">
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <h4 class="footer-brand">KARKEE TOOLS</h4>
+                <p>Free tools. Simple solutions.</p>
+                <p class="text-muted">
+                    Simple and useful online tools to make everyday tasks easier.
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Legal</h5>
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="text-center">
+            <p class="mb-1">
+                © 2026 KARKEE TOOLS. All rights reserved.
+            </p>
+            <small>By Karkee Digital Studio</small>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

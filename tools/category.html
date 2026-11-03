@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Tools - KARKEE TOOLS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../index.html">
+                KARKEE TOOLS
+            </a>
+            <a href="../index.html" class="btn btn-outline-primary btn-sm">
+                Home
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <h1 id="category-title">Loading category...</h1>
+        <p id="category-description" class="text-muted"></p>
+
+        <div id="category-tools" class="row g-4 mt-3">
+            <p>Loading tools...</p>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/category.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories | KARKEE TOOLS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-light">
+
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="dashboard.html">
+            KARKEE TOOLS
+        </a>
+
+        <div class="d-flex gap-2">
+            <a href="dashboard.html" class="btn btn-outline-secondary btn-sm">
+                Dashboard
+            </a>
+
+            <button class="btn btn-outline-danger btn-sm" id="logoutBtn">
+                Logout
+            </button>
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="container py-5">
+
+    <h2 class="fw-bold">Manage Categories</h2>
+    <p class="text-muted">Create and organize your tool categories.</p>
+
+    <!-- Category Form -->
+    <div class="card border-0 shadow-sm my-4">
+        <div class="card-body p-4">
+
+            <h4 id="formTitle">Add New Category</h4>
+
+            <form id="categoryForm">
+
+                <input type="hidden" id="categoryId">
+
+                <div class="row g-3 mt-1">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" id="categoryName"
+                               class="form-control" placeholder="Example: Audio Tools"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Category Slug</label>
+                        <input type="text" id="categorySlug"
+                               class="form-control" placeholder="audio-tools"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Category Icon</label>
+                        <input type="text" id="categoryIcon"
+                               class="form-control" placeholder="🎵">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Description</label>
+                        <input type="text" id="categoryDescription"
+                               class="form-control" placeholder="Audio editing tools">
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary" id="saveCategoryBtn">
+                        Save Category
+                    </button>
+
+                    <button type="button" class="btn btn-outline-secondary"
+                            id="clearCategoryBtn">
+                        Clear
+                    </button>
+                </div>
+
+                <p id="categoryMessage" class="mt-3 mb-0"></p>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Category List -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+
+            <h4 class="mb-3">Existing Categories</h4>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="categoriesTableBody">
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">
+                                Categories will load here.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/manage-categories.js"></script>
+
+</body>
+</html>

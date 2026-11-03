@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Website Overview | KARKEE TOOLS</title>
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="dashboard.html">
+            KARKEE TOOLS
+        </a>
+
+        <div class="d-flex gap-2">
+            <a href="dashboard.html" class="btn btn-outline-secondary btn-sm">
+                Dashboard
+            </a>
+
+            <button class="btn btn-outline-danger btn-sm" id="logoutBtn">
+                Logout
+            </button>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-2">Website Overview</h2>
+
+    <p class="text-muted mb-4">
+        View your website statistics and content summary.
+    </p>
+
+    <div id="loadingMessage" class="text-muted">
+        Loading statistics...
+    </div>
+
+    <div class="row g-4" id="statisticsSection" style="display:none;">
+
+        <!-- Tools Statistics -->
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Total Tools</p>
+                <h2 class="fw-bold" id="totalTools">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Published Tools</p>
+                <h2 class="fw-bold text-success" id="publishedTools">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Draft Tools</p>
+                <h2 class="fw-bold text-secondary" id="draftTools">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Total Categories</p>
+                <h2 class="fw-bold" id="totalCategories">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Featured Tools</p>
+                <h2 class="fw-bold" id="featuredTools">0</h2>
+            </div>
+        </div>
+
+        <!-- Contact Messages Statistics -->
+
+        <div class="col-12 mt-5">
+            <h4 class="fw-bold">Contact Messages</h4>
+            <p class="text-muted">
+                Overview of messages submitted through your contact form.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Total Messages</p>
+                <h2 class="fw-bold" id="totalContactMessages">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Unread Messages</p>
+                <h2 class="fw-bold text-danger" id="unreadContactMessages">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <p class="text-muted mb-2">Read Messages</p>
+                <h2 class="fw-bold text-success" id="readContactMessages">0</h2>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <a href="contact-messages.html" class="btn btn-outline-primary">
+                View Contact Messages
+            </a>
+        </div>
+
+    </div>
+
+    <div id="overviewError" class="alert alert-danger mt-4" style="display:none;"></div>
+
+    <button class="btn btn-primary mt-4" id="refreshStatsBtn">
+        Refresh Statistics
+    </button>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/overview.js"></script>
+
+</body>
+</html>

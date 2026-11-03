@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Messages | KARKEE TOOLS Admin</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container-fluid px-4">
+
+        <a class="navbar-brand fw-bold" href="dashboard.html">
+            KARKEE TOOLS ADMIN
+        </a>
+
+        <div class="d-flex gap-2">
+            <a href="dashboard.html" class="btn btn-outline-primary btn-sm">
+                Dashboard
+            </a>
+
+            <button id="logoutBtn" class="btn btn-danger btn-sm">
+                Logout
+            </button>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Contact Messages</h2>
+            <p class="text-muted mb-0">
+                Manage messages submitted by website visitors.
+            </p>
+        </div>
+
+        <button id="refreshBtn" class="btn btn-primary">
+            Refresh Messages
+        </button>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-3">
+                <p class="text-muted mb-1">Total Messages</p>
+                <h2 id="totalMessages">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-3">
+                <p class="text-muted mb-1">Unread Messages</p>
+                <h2 id="unreadMessages">0</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="loadingMessage" class="text-center p-4">
+        Loading messages...
+    </div>
+
+    <div id="errorMessage" class="alert alert-danger d-none"></div>
+
+    <!-- Messages -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="messagesTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <p id="emptyMessage" class="text-center text-muted d-none">
+                No contact messages found.
+            </p>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Message Details Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Message Details</h5>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewName"></span></p>
+                <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+                <p><strong>Subject:</strong> <span id="viewSubject"></span></p>
+                <p><strong>Date:</strong> <span id="viewDate"></span></p>
+
+                <hr>
+
+                <strong>Message:</strong>
+                <p id="viewMessage" class="mt-2"
+                   style="white-space:pre-wrap;"></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/contact-messages.js"></script>
+
+</body>
+</html>

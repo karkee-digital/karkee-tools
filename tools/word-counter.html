@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Free Word Counter Online | KARKEE TOOLS</title>
+    <meta name="description" content="Count words, characters, sentences and paragraphs instantly with the free KARKEE TOOLS Word Counter.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../index.html">
+                KARKEE TOOLS
+            </a>
+
+            <a href="../index.html" class="btn btn-outline-primary btn-sm">
+                Home
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+
+        <div class="text-center mb-4">
+            <h1>Free Word Counter</h1>
+            <p class="text-muted">
+                Count words, characters, sentences and paragraphs instantly.
+            </p>
+        </div>
+
+        <div class="card shadow-sm border-0 p-4">
+
+            <label for="text-input" class="form-label fw-semibold">
+                Enter or paste your text
+            </label>
+
+            <textarea
+                id="text-input"
+                class="form-control mb-3"
+                rows="10"
+                placeholder="Start typing or paste your text here..."
+            ></textarea>
+
+            <div class="d-flex gap-2 flex-wrap mb-4">
+                <button id="clear-btn" class="btn btn-outline-danger">
+                    Clear Text
+                </button>
+
+                <button id="copy-btn" class="btn btn-primary">
+                    Copy Text
+                </button>
+            </div>
+
+            <h4 class="mb-3">Text Statistics</h4>
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-4">
+                    <div class="category-card text-center">
+                        <h3 id="word-count">0</h3>
+                        <p>Words</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="category-card text-center">
+                        <h3 id="character-count">0</h3>
+                        <p>Characters</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="category-card text-center">
+                        <h3 id="no-space-count">0</h3>
+                        <p>Without Spaces</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="category-card text-center">
+                        <h3 id="sentence-count">0</h3>
+                        <p>Sentences</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="category-card text-center">
+                        <h3 id="paragraph-count">0</h3>
+                        <p>Paragraphs</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h4>About Word Counter</h4>
+            <p class="text-muted">
+                This free online tool helps you count words, characters,
+                sentences and paragraphs. It is useful for students,
+                writers, bloggers and content creators.
+            </p>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-4 border-top">
+        <p class="mb-0 text-muted">
+            © 2026 KARKEE TOOLS | By Karkee Digital Studio
+        </p>
+    </footer>
+
+    <script src="../js/word-counter.js"></script>
+
+</body>
+</html>

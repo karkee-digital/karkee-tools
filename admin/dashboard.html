@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | KARKEE TOOLS</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-light">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="../index.html">
+                KARKEE TOOLS
+            </a>
+
+            <button class="btn btn-outline-danger btn-sm" id="logoutBtn">
+                Logout
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="container py-5">
+
+        <h2 class="fw-bold mb-2">Admin Dashboard</h2>
+
+        <p class="text-muted mb-4">
+            Manage your KARKEE TOOLS website.
+        </p>
+
+        <div class="row g-4">
+
+            <!-- Manage Tools -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+
+                    <h5>Manage Tools</h5>
+
+                    <p class="text-muted">
+                        Add, edit, publish and remove website tools.
+                    </p>
+
+                    <a href="manage-tools.html" class="btn btn-primary">
+                        Manage Tools
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Manage Categories -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+
+                    <h5>Manage Categories</h5>
+
+                    <p class="text-muted">
+                        Add, edit and organize your tool categories.
+                    </p>
+
+                    <a href="manage-categories.html" class="btn btn-primary">
+                        Manage Categories
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Website Overview -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+
+                    <h5>Website Overview</h5>
+
+                    <p class="text-muted">
+                        View total tools, published tools, drafts,
+                        categories and featured tools.
+                    </p>
+
+                    <a href="overview.html" class="btn btn-primary">
+                        Website Overview
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Contact Messages -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+
+                    <h5>Contact Messages</h5>
+
+                    <p class="text-muted">
+                        View visitor messages, manage read status
+                        and delete unwanted messages.
+                    </p>
+
+                    <a href="contact-messages.html" class="btn btn-primary">
+                        View Messages
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Admin Status -->
+        <div id="adminMessage" class="mt-4 text-muted">
+            Checking admin access...
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/supabase.js"></script>
+
+    <script src="../js/admin-dashboard.js"></script>
+
+</body>
+</html>
