@@ -129,11 +129,14 @@
     </div>
 </footer>
 
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 
-<script>
+<!-- Website Analytics -->
+<script src="js/analytics.js"></script>
 
+<script>
 const contactForm = document.getElementById("contactForm");
 const formMessage = document.getElementById("formMessage");
 const submitBtn = document.getElementById("submitBtn");
@@ -148,7 +151,6 @@ function showMessage(message, type) {
     });
 }
 
-// Extract useful error information from Supabase function errors.
 async function getFunctionError(error) {
     if (error?.context instanceof Response) {
         try {
@@ -194,7 +196,6 @@ contactForm.addEventListener("submit", async function(event) {
         return;
     }
 
-    // Get Cloudflare Turnstile token.
     const turnstileField = document.querySelector(
         '[name="cf-turnstile-response"]'
     );
@@ -214,9 +215,6 @@ contactForm.addEventListener("submit", async function(event) {
     formMessage.classList.add("d-none");
 
     try {
-
-        // Edge Function verifies CAPTCHA,
-        // checks rate limit, saves message and sends email.
 
         const { data, error } =
             await supabaseClient.functions.invoke(
@@ -291,7 +289,6 @@ contactForm.addEventListener("submit", async function(event) {
 
     } finally {
 
-        // Reset Turnstile for the next submission.
         if (window.turnstile) {
             window.turnstile.reset();
         }
@@ -302,7 +299,6 @@ contactForm.addEventListener("submit", async function(event) {
     }
 
 });
-
 </script>
 
 </body>
