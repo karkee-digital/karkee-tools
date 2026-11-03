@@ -54,6 +54,71 @@
             </p>
         </div>
 
+        <!-- Date Range Filter -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm p-4">
+
+                <h5 class="fw-bold mb-3">Filter Analytics</h5>
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-12 col-md-4">
+                        <label for="analyticsDateRange" class="form-label">
+                            Select Date Range
+                        </label>
+
+                        <select id="analyticsDateRange" class="form-select">
+                            <option value="today">Today</option>
+                            <option value="7" selected>Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                            <option value="custom">Custom Date Range</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3" id="customStartDateWrapper" style="display:none;">
+                        <label for="analyticsStartDate" class="form-label">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="analyticsStartDate"
+                            class="form-control"
+                        >
+                    </div>
+
+                    <div class="col-12 col-md-3" id="customEndDateWrapper" style="display:none;">
+                        <label for="analyticsEndDate" class="form-label">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="analyticsEndDate"
+                            class="form-control"
+                        >
+                    </div>
+
+                    <div class="col-12 col-md-2">
+                        <button
+                            type="button"
+                            class="btn btn-primary w-100"
+                            id="applyDateFilterBtn"
+                        >
+                            Apply Filter
+                        </button>
+                    </div>
+
+                </div>
+
+                <small class="text-muted mt-3" id="analyticsFilterMessage">
+                    Showing analytics for the last 7 days.
+                </small>
+
+            </div>
+        </div>
+
         <!-- Analytics Cards -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-4">
