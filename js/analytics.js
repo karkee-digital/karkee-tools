@@ -19,36 +19,52 @@
     // Remove the local project folder from the path.
     pagePath = pagePath.replace(/^\/karkee-tools/, "");
 
-    // Ensure homepage is recorded as "/".
-    if (pagePath === "" || pagePath === "/index.html") {
+    // Normalize homepage URLs.
+    if (
+        pagePath === "" ||
+        pagePath === "/" ||
+        pagePath === "/index.html"
+    ) {
         pagePath = "/";
     }
 
-    // Detect tool pages.
-    const toolMatch = pagePath.match(/^\/tools\/([^/]+)\.html$/);
+    // Detect tool pages with or without .html.
+    const toolMatch = pagePath.match(
+        /^\/tools\/([^/]+?)(?:\.html)?\/?$/
+    );
+
     const toolSlug = toolMatch ? toolMatch[1] : null;
 
+    // Record the visit.
     async function recordVisit() {
         if (typeof supabaseClient === "undefined") {
             console.error("Supabase client is not available.");
             return;
         }
 
-        const { error } = await supabaseClient.functions.invoke(
-            "track-visit",
-            {
-                body: {
-                    page_path: pagePath,
-                    tool_slug: toolSlug,
-                    visitor_id: visitorId
+        try {
+            const { error } = await supabaseClient.functions.invoke(
+                "track-visit",
+                {
+                    body: {
+                        page_path: pagePath,
+                        tool_slug: toolSlug,
+                        visitor_id: visitorId
+                    }
                 }
-            }
-        );
+            );
 
-        if (error) {
-            console.error("Analytics tracking failed:", error);
-        } else {
-            console.log("Analytics visit recorded:", pagePath, toolSlug);
+            if (error) {
+                console.error("Analytics tracking failed:", error);
+            } else {
+                console.log(
+                    "Analytics visit recorded:",
+                    pagePath,
+                    toolSlug
+                );
+            }
+        } catch (error) {
+            console.error("Analytics error:", error);
         }
     }
 
