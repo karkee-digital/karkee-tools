@@ -1,6 +1,9 @@
 let pageViewsChart = null;
 let monthlyPageViewsChart = null;
 
+// Stores the latest analytics data for CSV export.
+let latestAnalyticsExportData = null;
+
 
 // ==========================================
 // VERIFY ADMIN ACCESS
@@ -238,6 +241,86 @@ function filterVisitsByDate(records, startDate, endDate) {
 
 
 // ==========================================
+// CREATE DAILY ANALYTICS
+// ==========================================
+
+function getDailyAnalytics(records, startDate, endDate) {
+
+    const dailyCounts = {};
+
+    const start = new Date(`${startDate}T12:00:00+05:30`);
+    const end = new Date(`${endDate}T12:00:00+05:30`);
+
+    const current = new Date(start);
+
+    while (current <= end) {
+
+        const dateKey = getIndiaDate(current);
+
+        dailyCounts[dateKey] = 0;
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    records.forEach(item => {
+
+        if (!item.visited_at) return;
+
+        const visitDate = getIndiaDate(new Date(item.visited_at));
+
+        if (Object.prototype.hasOwnProperty.call(dailyCounts, visitDate)) {
+            dailyCounts[visitDate]++;
+        }
+    });
+
+    return Object.entries(dailyCounts).map(([date, count]) => ({
+        date,
+        count
+    }));
+}
+
+
+// ==========================================
+// CREATE MONTHLY ANALYTICS
+// ==========================================
+
+function getMonthlyAnalytics(records) {
+
+    const monthlyCounts = {};
+    const currentMonth = getIndiaMonth(new Date());
+
+    const [year, month] = currentMonth.split("-").map(Number);
+
+    for (let i = 11; i >= 0; i--) {
+
+        const date = new Date(
+            Date.UTC(year, month - 1 - i, 1, 12)
+        );
+
+        const monthKey = getIndiaMonth(date);
+
+        monthlyCounts[monthKey] = 0;
+    }
+
+    records.forEach(item => {
+
+        if (!item.visited_at) return;
+
+        const visitMonth = getIndiaMonth(new Date(item.visited_at));
+
+        if (Object.prototype.hasOwnProperty.call(monthlyCounts, visitMonth)) {
+            monthlyCounts[visitMonth]++;
+        }
+    });
+
+    return Object.entries(monthlyCounts).map(([month, count]) => ({
+        month,
+        count
+    }));
+}
+
+
+// ==========================================
 // 7-DAY PAGE VIEWS CHART
 // ==========================================
 
@@ -442,6 +525,7 @@ async function loadWebsiteAnalytics() {
 
     const filterMessage = document.getElementById("analyticsFilterMessage");
     const applyButton = document.getElementById("applyDateFilterBtn");
+    const overviewError = document.getElementById("overviewError");
 
     if (applyButton) {
         applyButton.disabled = true;
@@ -484,7 +568,7 @@ async function loadWebsiteAnalytics() {
         document.getElementById("uniqueVisitors").textContent = uniqueVisitorCount;
         document.getElementById("todayPageViews").textContent = todayViews;
 
-        // Keep the two charts on their original fixed periods.
+        // Keep charts on their original fixed periods.
         renderPageViewsChart(allRecords);
         renderMonthlyPageViewsChart(allRecords);
 
@@ -542,6 +626,31 @@ async function loadWebsiteAnalytics() {
                 : '<p class="text-muted">No tool visits in this period.</p>';
 
 
+        // Prepare data for CSV export.
+        latestAnalyticsExportData = {
+
+            startDate,
+            endDate,
+
+            totalViews,
+            uniqueVisitorCount,
+            todayViews,
+
+            dailyAnalytics: getDailyAnalytics(
+                records,
+                startDate,
+                endDate
+            ),
+
+            monthlyAnalytics: getMonthlyAnalytics(allRecords),
+
+            popularPages,
+
+            popularTools
+
+        };
+
+
         // Filter information
         if (filterMessage) {
 
@@ -557,6 +666,23 @@ async function loadWebsiteAnalytics() {
                 `Showing analytics: ${labels[range]} (${startDate} to ${endDate}).`;
         }
 
+        if (overviewError) {
+            overviewError.style.display = "none";
+        }
+
+    } catch (error) {
+
+        console.error("Analytics loading error:", error);
+
+        if (overviewError) {
+            overviewError.textContent =
+                "Unable to load analytics: " + error.message;
+
+            overviewError.style.display = "block";
+        }
+
+        throw error;
+
     } finally {
 
         if (applyButton) {
@@ -564,6 +690,154 @@ async function loadWebsiteAnalytics() {
             applyButton.textContent = "Apply Filter";
         }
     }
+}
+
+
+// ==========================================
+// CSV HELPER
+// ==========================================
+
+function escapeCSV(value) {
+
+    const text = String(value ?? "");
+
+    return `"${text.replace(/"/g, '""')}"`;
+}
+
+
+// ==========================================
+// EXPORT ANALYTICS CSV
+// ==========================================
+
+function exportAnalyticsCSV() {
+
+    if (!latestAnalyticsExportData) {
+        alert("Please load analytics before exporting.");
+        return;
+    }
+
+    const data = latestAnalyticsExportData;
+
+    const rows = [];
+
+    // CSV headings
+    rows.push([
+        "Section",
+        "Metric",
+        "Count",
+        "Start Date",
+        "End Date"
+    ]);
+
+    // Summary
+    rows.push([
+        "Summary",
+        "Total Page Views",
+        data.totalViews,
+        data.startDate,
+        data.endDate
+    ]);
+
+    rows.push([
+        "Summary",
+        "Unique Visitors",
+        data.uniqueVisitorCount,
+        data.startDate,
+        data.endDate
+    ]);
+
+    rows.push([
+        "Summary",
+        "Today's Page Views",
+        data.todayViews,
+        data.startDate,
+        data.endDate
+    ]);
+
+
+    // Daily page views
+    data.dailyAnalytics.forEach(item => {
+
+        rows.push([
+            "Daily Page Views",
+            item.date,
+            item.count,
+            data.startDate,
+            data.endDate
+        ]);
+
+    });
+
+
+    // Monthly page views
+    data.monthlyAnalytics.forEach(item => {
+
+        rows.push([
+            "Monthly Page Views",
+            item.month,
+            item.count,
+            "",
+            ""
+        ]);
+
+    });
+
+
+    // Popular pages
+    data.popularPages.forEach(([page, count]) => {
+
+        rows.push([
+            "Popular Pages",
+            page,
+            count,
+            data.startDate,
+            data.endDate
+        ]);
+
+    });
+
+
+    // Most-used tools
+    data.popularTools.forEach(([tool, count]) => {
+
+        rows.push([
+            "Most Used Tools",
+            tool,
+            count,
+            data.startDate,
+            data.endDate
+        ]);
+
+    });
+
+
+    // Convert rows into CSV text.
+    const csvContent = rows
+        .map(row => row.map(escapeCSV).join(","))
+        .join("\r\n");
+
+    // UTF-8 BOM helps Excel display characters correctly.
+    const blob = new Blob(
+        ["\uFEFF" + csvContent],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    const today = getIndiaDate(new Date());
+
+    link.href = url;
+    link.download = `karkee-tools-analytics-${today}.csv`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
 }
 
 
@@ -703,6 +977,17 @@ async function initializeOverview() {
 
 document.getElementById("refreshStatsBtn")
     .addEventListener("click", loadStatistics);
+
+
+// ==========================================
+// EXPORT BUTTON
+// ==========================================
+
+const exportButton = document.getElementById("exportAnalyticsBtn");
+
+if (exportButton) {
+    exportButton.addEventListener("click", exportAnalyticsCSV);
+}
 
 
 // ==========================================

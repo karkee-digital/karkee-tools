@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +8,7 @@
     <meta name="robots" content="noindex, nofollow">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -270,9 +270,20 @@
 
     <div id="overviewError" class="alert alert-danger mt-4" style="display:none;"></div>
 
-    <button class="btn btn-primary mt-4" id="refreshStatsBtn">
-        Refresh Statistics
-    </button>
+    <!-- Analytics Actions -->
+    <div class="d-flex flex-wrap gap-2 mt-4">
+
+        <button class="btn btn-primary" id="refreshStatsBtn">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh Statistics
+        </button>
+
+        <button class="btn btn-success" id="exportAnalyticsBtn">
+            <i class="bi bi-download"></i>
+            Export Analytics (CSV)
+        </button>
+
+    </div>
 
 </div>
 
