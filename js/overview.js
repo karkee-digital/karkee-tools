@@ -1,6 +1,10 @@
 let pageViewsChart = null;
 let monthlyPageViewsChart = null;
 
+let deviceChart = null;
+let browserChart = null;
+let osChart = null;
+
 // Stores the latest analytics data for CSV export.
 let latestAnalyticsExportData = null;
 
@@ -216,7 +220,11 @@ function initializeDateFilter() {
 
     applyButton.addEventListener("click", async function () {
 
-        await loadWebsiteAnalytics();
+        try {
+            await loadWebsiteAnalytics();
+        } catch (error) {
+            console.error("Date filter error:", error);
+        }
 
     });
 }
@@ -518,6 +526,159 @@ function renderMonthlyPageViewsChart(records) {
 
 
 // ==========================================
+// AUDIENCE ANALYTICS HELPERS
+// ==========================================
+
+function getAudienceCounts(records, field) {
+
+    const counts = {};
+
+    records.forEach(item => {
+
+        const value = item[field] || "Unknown";
+
+        counts[value] = (counts[value] || 0) + 1;
+
+    });
+
+    return Object.entries(counts)
+        .sort((a, b) => b[1] - a[1]);
+}
+
+
+function renderAudienceList(elementId, data) {
+
+    const container = document.getElementById(elementId);
+
+    if (!container) return;
+
+    if (!data.length) {
+        container.innerHTML =
+            '<p class="text-muted mb-0">No audience data available yet.</p>';
+        return;
+    }
+
+    const total = data.reduce((sum, item) => sum + item[1], 0);
+
+    container.innerHTML = data.map(([name, count]) => {
+
+        const percentage = total
+            ? Math.round((count / total) * 100)
+            : 0;
+
+        return `
+            <div class="d-flex justify-content-between align-items-center border-bottom py-2 gap-2">
+                <span class="text-break">${escapeHTML(name)}</span>
+                <strong>${count} (${percentage}%)</strong>
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+// ==========================================
+// CREATE AUDIENCE DOUGHNUT CHART
+// ==========================================
+
+function createAudienceChart(canvasId, existingChart, data, label) {
+
+    const canvas = document.getElementById(canvasId);
+
+    if (!canvas) return null;
+
+    if (existingChart) {
+        existingChart.destroy();
+    }
+
+    const chartData = data.length ? data : [["No data", 1]];
+
+    return new Chart(canvas, {
+
+        type: "doughnut",
+
+        data: {
+            labels: chartData.map(item => item[0]),
+
+            datasets: [{
+                label: label,
+                data: chartData.map(item => item[1]),
+                backgroundColor: [
+                    "#0d6efd",
+                    "#20c997",
+                    "#ffc107",
+                    "#dc3545",
+                    "#6f42c1",
+                    "#fd7e14",
+                    "#20c997"
+                ],
+                borderWidth: 2,
+                borderColor: "#ffffff"
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: "bottom"
+                },
+
+                tooltip: {
+                    enabled: data.length > 0
+                }
+            }
+        }
+    });
+}
+
+
+// ==========================================
+// RENDER ALL AUDIENCE ANALYTICS
+// ==========================================
+
+function renderAudienceAnalytics(records) {
+
+    const deviceData = getAudienceCounts(records, "device_type");
+    const browserData = getAudienceCounts(records, "browser");
+    const osData = getAudienceCounts(records, "operating_system");
+
+    deviceChart = createAudienceChart(
+        "deviceChart",
+        deviceChart,
+        deviceData,
+        "Devices"
+    );
+
+    browserChart = createAudienceChart(
+        "browserChart",
+        browserChart,
+        browserData,
+        "Browsers"
+    );
+
+    osChart = createAudienceChart(
+        "osChart",
+        osChart,
+        osData,
+        "Operating Systems"
+    );
+
+    renderAudienceList("deviceStats", deviceData);
+    renderAudienceList("browserStats", browserData);
+    renderAudienceList("osStats", osData);
+
+    return {
+        deviceData,
+        browserData,
+        osData
+    };
+}
+
+
+// ==========================================
 // LOAD WEBSITE ANALYTICS
 // ==========================================
 
@@ -538,7 +699,15 @@ async function loadWebsiteAnalytics() {
 
         const { data: visits, error } = await supabaseClient
             .from("site_visits")
-            .select("page_path, tool_slug, visitor_id, visited_at")
+            .select(`
+                page_path,
+                tool_slug,
+                visitor_id,
+                visited_at,
+                device_type,
+                browser,
+                operating_system
+            `)
             .order("visited_at", { ascending: false })
             .limit(10000);
 
@@ -568,12 +737,15 @@ async function loadWebsiteAnalytics() {
         document.getElementById("uniqueVisitors").textContent = uniqueVisitorCount;
         document.getElementById("todayPageViews").textContent = todayViews;
 
-        // Keep charts on their original fixed periods.
+        // Existing page-view charts.
         renderPageViewsChart(allRecords);
         renderMonthlyPageViewsChart(allRecords);
 
+        // New audience charts use the selected date range.
+        const audienceData = renderAudienceAnalytics(records);
 
-        // Popular pages for selected date range
+
+        // Popular pages for selected date range.
         const pageCounts = {};
 
         records.forEach(item => {
@@ -599,7 +771,7 @@ async function loadWebsiteAnalytics() {
                 : '<p class="text-muted">No page visits in this period.</p>';
 
 
-        // Most-used tools for selected date range
+        // Most-used tools for selected date range.
         const toolCounts = {};
 
         records.forEach(item => {
@@ -645,13 +817,16 @@ async function loadWebsiteAnalytics() {
             monthlyAnalytics: getMonthlyAnalytics(allRecords),
 
             popularPages,
+            popularTools,
 
-            popularTools
+            deviceData: audienceData.deviceData,
+            browserData: audienceData.browserData,
+            osData: audienceData.osData
 
         };
 
 
-        // Filter information
+        // Filter information.
         if (filterMessage) {
 
             const labels = {
@@ -706,6 +881,26 @@ function escapeCSV(value) {
 
 
 // ==========================================
+// ADD AUDIENCE DATA TO CSV
+// ==========================================
+
+function addAudienceCSVRows(rows, section, data, startDate, endDate) {
+
+    data.forEach(([name, count]) => {
+
+        rows.push([
+            section,
+            name,
+            count,
+            startDate,
+            endDate
+        ]);
+
+    });
+}
+
+
+// ==========================================
 // EXPORT ANALYTICS CSV
 // ==========================================
 
@@ -720,7 +915,6 @@ function exportAnalyticsCSV() {
 
     const rows = [];
 
-    // CSV headings
     rows.push([
         "Section",
         "Metric",
@@ -729,7 +923,7 @@ function exportAnalyticsCSV() {
         "End Date"
     ]);
 
-    // Summary
+    // Summary.
     rows.push([
         "Summary",
         "Total Page Views",
@@ -754,8 +948,7 @@ function exportAnalyticsCSV() {
         data.endDate
     ]);
 
-
-    // Daily page views
+    // Daily page views.
     data.dailyAnalytics.forEach(item => {
 
         rows.push([
@@ -768,8 +961,7 @@ function exportAnalyticsCSV() {
 
     });
 
-
-    // Monthly page views
+    // Monthly page views.
     data.monthlyAnalytics.forEach(item => {
 
         rows.push([
@@ -782,8 +974,7 @@ function exportAnalyticsCSV() {
 
     });
 
-
-    // Popular pages
+    // Popular pages.
     data.popularPages.forEach(([page, count]) => {
 
         rows.push([
@@ -796,8 +987,7 @@ function exportAnalyticsCSV() {
 
     });
 
-
-    // Most-used tools
+    // Most-used tools.
     data.popularTools.forEach(([tool, count]) => {
 
         rows.push([
@@ -810,13 +1000,36 @@ function exportAnalyticsCSV() {
 
     });
 
+    // Audience analytics.
+    addAudienceCSVRows(
+        rows,
+        "Devices",
+        data.deviceData,
+        data.startDate,
+        data.endDate
+    );
+
+    addAudienceCSVRows(
+        rows,
+        "Browsers",
+        data.browserData,
+        data.startDate,
+        data.endDate
+    );
+
+    addAudienceCSVRows(
+        rows,
+        "Operating Systems",
+        data.osData,
+        data.startDate,
+        data.endDate
+    );
 
     // Convert rows into CSV text.
     const csvContent = rows
         .map(row => row.map(escapeCSV).join(","))
         .join("\r\n");
 
-    // UTF-8 BOM helps Excel display characters correctly.
     const blob = new Blob(
         ["\uFEFF" + csvContent],
         { type: "text/csv;charset=utf-8;" }
@@ -935,6 +1148,17 @@ async function loadStatistics() {
 
         loadingMessage.style.display = "none";
         statisticsSection.style.display = "flex";
+
+        // Resize charts after their containers become visible.
+        [
+            pageViewsChart,
+            monthlyPageViewsChart,
+            deviceChart,
+            browserChart,
+            osChart
+        ].forEach(chart => {
+            if (chart) chart.resize();
+        });
 
     } catch (error) {
 
